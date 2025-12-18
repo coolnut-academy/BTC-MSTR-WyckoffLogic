@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wyckoff Logic Pro: Full TradingView Edition</title>
+    <title>Wyckoff Logic Pro: MTF Edition</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -41,6 +41,14 @@
 
         /* TradingView Widget Container */
         .tv-widget-container { height: 320px; width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid #334155; margin-top: 1rem; }
+
+        /* TF Grid */
+        .tf-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
+        .tf-box { background: #334155; border-radius: 6px; padding: 6px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50px; }
+        .tf-label { font-size: 0.65rem; color: #94a3b8; font-weight: bold; margin-bottom: 2px; }
+        .tf-score { font-size: 0.9rem; font-weight: bold; font-family: 'JetBrains Mono', monospace; }
+        .loading-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="min-h-screen p-2 md:p-4 pb-32 max-w-7xl mx-auto">
@@ -50,7 +58,7 @@
             <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400">
                 <i class="fa-solid fa-layer-group mr-2"></i>Wyckoff Logic Pro
             </h1>
-            <p class="text-xs text-slate-400">Full TradingView Integration (Real Graphs)</p>
+            <p class="text-xs text-slate-400">Multi-Timeframe Analysis & Real-Time Data</p>
         </div>
         
         <div class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-3">
@@ -65,7 +73,7 @@
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <h2 class="text-xl font-bold text-yellow-500">BTC / THB</h2>
-                    <p class="text-xs text-slate-400">Bitkub Exchange (Via TradingView)</p>
+                    <p class="text-xs text-slate-400">Bitkub (Multi-Timeframe Wyckoff)</p>
                 </div>
                 <div class="text-right">
                     <div id="btc-price" class="text-2xl font-mono font-bold text-white">Loading...</div>
@@ -75,22 +83,33 @@
 
             <div class="bg-slate-900/50 rounded-lg p-3 mb-4 backdrop-blur-sm border border-slate-700">
                 <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-400">RSI (14)</span><span id="btc-rsi" class="font-bold text-yellow-300">-</span>
-                </div>
-                <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-400">Score</span><span id="btc-score-text" class="font-bold text-white">0/100</span>
+                    <span class="text-slate-400">Overall Score</span><span id="btc-score-text" class="font-bold text-white">Calculating...</span>
                 </div>
                 <div class="gauge-container mt-1">
                     <div id="btc-gauge" class="gauge-fill bg-slate-500" style="width: 0%;"></div>
                 </div>
-                <p id="btc-recommendation" class="text-xs mt-2 text-center text-green-400 font-bold">Waiting...</p>
+                <p id="btc-recommendation" class="text-xs mt-2 text-center text-green-400 font-bold">Waiting for data...</p>
             </div>
 
             <div class="tv-widget-container" id="tv-btc-container"></div>
             
+            <div class="mt-4 border-t border-slate-700 pt-3">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="text-[10px] text-slate-400 font-bold"><i class="fa-solid fa-clock mr-1"></i>Wyckoff Score by Timeframe</div>
+                    <div id="btc-mtf-status" class="text-[9px] text-slate-500"><i class="fa-solid fa-spinner loading-spin mr-1"></i>Analyzing...</div>
+                </div>
+                <div class="tf-grid" id="btc-tf-grid">
+                    <div class="tf-box"><span class="tf-label">1 Hr</span><span class="tf-score text-slate-500">-</span></div>
+                    <div class="tf-box"><span class="tf-label">4 Hr</span><span class="tf-score text-slate-500">-</span></div>
+                    <div class="tf-box"><span class="tf-label">1 Day</span><span class="tf-score text-slate-500">-</span></div>
+                    <div class="tf-box"><span class="tf-label">3 Day</span><span class="tf-score text-slate-500">-</span></div>
+                    <div class="tf-box"><span class="tf-label">1 Week</span><span class="tf-score text-slate-500">-</span></div>
+                </div>
+            </div>
+
             <div class="mt-3 grid grid-cols-2 gap-2 text-center">
-                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Support</div><div class="text-xs font-mono text-green-400" id="btc-support">-</div></div>
-                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Resistance</div><div class="text-xs font-mono text-red-400" id="btc-res">-</div></div>
+                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Day Support</div><div class="text-xs font-mono text-green-400" id="btc-support">-</div></div>
+                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Day Resistance</div><div class="text-xs font-mono text-red-400" id="btc-res">-</div></div>
             </div>
         </div>
 
@@ -98,7 +117,7 @@
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <h2 class="text-xl font-bold text-red-500">MSTR</h2>
-                    <p class="text-xs text-slate-400">NASDAQ (Via TradingView)</p>
+                    <p class="text-xs text-slate-400">NASDAQ (Multi-Timeframe Wyckoff)</p>
                 </div>
                 <div class="text-right">
                     <div id="mstr-price" class="text-2xl font-mono font-bold text-white">Loading...</div>
@@ -108,22 +127,33 @@
 
             <div class="bg-slate-900/50 rounded-lg p-3 mb-4 backdrop-blur-sm border border-slate-700">
                 <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-400">RSI (14)</span><span id="mstr-rsi" class="font-bold text-red-300">-</span>
-                </div>
-                <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-400">Score</span><span id="mstr-score-text" class="font-bold text-white">0/100</span>
+                    <span class="text-slate-400">Overall Score</span><span id="mstr-score-text" class="font-bold text-white">Calculating...</span>
                 </div>
                 <div class="gauge-container mt-1">
                     <div id="mstr-gauge" class="gauge-fill bg-slate-500" style="width: 0%;"></div>
                 </div>
-                <p id="mstr-recommendation" class="text-xs mt-2 text-center text-green-400 font-bold">Waiting...</p>
+                <p id="mstr-recommendation" class="text-xs mt-2 text-center text-green-400 font-bold">Waiting for data...</p>
             </div>
 
             <div class="tv-widget-container" id="tv-mstr-container"></div>
 
+            <div class="mt-4 border-t border-slate-700 pt-3">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="text-[10px] text-slate-400 font-bold"><i class="fa-solid fa-clock mr-1"></i>Wyckoff Score by Timeframe</div>
+                    <div id="mstr-mtf-status" class="text-[9px] text-slate-500"><i class="fa-solid fa-spinner loading-spin mr-1"></i>Analyzing...</div>
+                </div>
+                <div class="tf-grid" id="mstr-tf-grid">
+                    <div class="tf-box"><span class="tf-label">1 Hr</span><span class="tf-score text-slate-500">-</span></div>
+                    <div class="tf-box"><span class="tf-label">4 Hr</span><span class="tf-score text-slate-500">-</span></div>
+                    <div class="tf-box"><span class="tf-label">1 Day</span><span class="tf-score text-slate-500">-</span></div>
+                    <div class="tf-box"><span class="tf-label">3 Day</span><span class="tf-score text-slate-500">-</span></div>
+                    <div class="tf-box"><span class="tf-label">1 Week</span><span class="tf-score text-slate-500">-</span></div>
+                </div>
+            </div>
+
             <div class="mt-3 grid grid-cols-2 gap-2 text-center">
-                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Support</div><div class="text-xs font-mono text-green-400" id="mstr-support">-</div></div>
-                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Resistance</div><div class="text-xs font-mono text-red-400" id="mstr-res">-</div></div>
+                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Day Support</div><div class="text-xs font-mono text-green-400" id="mstr-support">-</div></div>
+                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Day Resistance</div><div class="text-xs font-mono text-red-400" id="mstr-res">-</div></div>
             </div>
         </div>
     </section>
@@ -190,22 +220,17 @@
 
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        // --- PROXY CONFIG (To bypass CORS blocking) ---
-        // ใช้ Proxy เพื่อให้ Browser สามารถดึงข้อมูลจาก Bitkub/Yahoo ได้จริงโดยไม่ติด Block
+        // --- PROXY & API CONFIG ---
         const CORS_PROXY = "https://api.allorigins.win/raw?url=";
-        
-        const BITKUB_API = CORS_PROXY + encodeURIComponent("https://api.bitkub.com/api/market/ticker?sym=THB_BTC");
-        const BITKUB_CANDLES = CORS_PROXY + encodeURIComponent("https://api.bitkub.com/api/market/candles?sym=THB_BTC&int=60&lmt=50");
-        const YAHOO_MSTR_API = CORS_PROXY + encodeURIComponent("https://query1.finance.yahoo.com/v8/finance/chart/MSTR?interval=1d&range=3mo");
+        const TIMEFRAMES = ['1h', '4h', '1d', '3d', '1w'];
 
-        // State Management
         const state = {
             budget: 567000,
             allocation: 70,
             exchangeRate: 34.50, 
             strategy: 'wyckoff',
-            btc: { current: 0, history: [], support: 0, resistance: 0 },
-            mstr: { current: 160.00, history: [], support: 150.00, resistance: 180.00 } 
+            btc: { current: 0, support: 0, resistance: 0 },
+            mstr: { current: 160.00, support: 0, resistance: 0 } 
         };
 
         const strategies = {
@@ -216,43 +241,138 @@
 
         // --- INIT TRADINGVIEW WIDGETS ---
         function initTradingView() {
-            // 1. BTC (Bitkub)
             new TradingView.widget({
-                "autosize": true,
-                "symbol": "BITKUB:BTCTHB",
-                "interval": "60",
-                "timezone": "Asia/Bangkok",
-                "theme": "dark",
-                "style": "1",
-                "locale": "en",
-                "toolbar_bg": "#f1f3f6",
-                "enable_publishing": false,
-                "hide_top_toolbar": true,
-                "hide_legend": false,
-                "container_id": "tv-btc-container",
-                "backgroundColor": "rgba(15, 23, 42, 1)"
+                "autosize": true, "symbol": "BITKUB:BTCTHB", "interval": "60", "timezone": "Asia/Bangkok",
+                "theme": "dark", "style": "1", "locale": "en", "toolbar_bg": "#f1f3f6", "enable_publishing": false,
+                "hide_top_toolbar": true, "hide_legend": false, "container_id": "tv-btc-container", "backgroundColor": "rgba(15, 23, 42, 1)"
             });
-
-            // 2. MSTR (NASDAQ)
             new TradingView.widget({
-                "autosize": true,
-                "symbol": "NASDAQ:MSTR",
-                "interval": "D",
-                "timezone": "Asia/Bangkok",
-                "theme": "dark",
-                "style": "1",
-                "locale": "en",
-                "toolbar_bg": "#f1f3f6",
-                "enable_publishing": false,
-                "hide_top_toolbar": true,
-                "hide_legend": false,
-                "container_id": "tv-mstr-container",
-                "backgroundColor": "rgba(15, 23, 42, 1)"
+                "autosize": true, "symbol": "NASDAQ:MSTR", "interval": "D", "timezone": "Asia/Bangkok",
+                "theme": "dark", "style": "1", "locale": "en", "toolbar_bg": "#f1f3f6", "enable_publishing": false,
+                "hide_top_toolbar": true, "hide_legend": false, "container_id": "tv-mstr-container", "backgroundColor": "rgba(15, 23, 42, 1)"
             });
         }
 
-        // --- DATA FETCHING (LOGIC ONLY) ---
-        // เราใช้ข้อมูลตรงนี้เพื่อคำนวณ Wyckoff Score และ Buy Ladder เท่านั้น (กราฟดูจาก Widget แทน)
+        // --- CORE DATA FETCHING (PARALLEL & RESAMPLING) ---
+
+        // 1. Fetch BTC Logic (Bitkub)
+        async function updateBTCLogic() {
+            document.getElementById('btc-mtf-status').innerHTML = '<i class="fa-solid fa-spinner loading-spin mr-1"></i>Updating...';
+            try {
+                // Fetch Price Ticker
+                const tickerUrl = CORS_PROXY + encodeURIComponent("https://api.bitkub.com/api/market/ticker?sym=THB_BTC");
+                const tickerRes = await fetch(tickerUrl);
+                const tickerData = await tickerRes.json();
+                
+                if (tickerData && tickerData.THB_BTC) {
+                    state.btc.current = tickerData.THB_BTC.last;
+                    updatePriceUI('btc', state.btc.current, tickerData.THB_BTC.percentChange, '฿');
+                }
+
+                // Fetch Candles for Logic (Optimization: Fetch 1H and 1D, then resample for others)
+                // 1H Data (for 1h, 4h)
+                const url1h = CORS_PROXY + encodeURIComponent("https://api.bitkub.com/api/market/candles?sym=THB_BTC&int=60&lmt=100");
+                // 1D Data (for 1d, 3d, 1w)
+                const url1d = CORS_PROXY + encodeURIComponent("https://api.bitkub.com/api/market/candles?sym=THB_BTC&int=1440&lmt=100");
+
+                const [res1h, res1d] = await Promise.all([fetch(url1h), fetch(url1d)]);
+                const data1h = await res1h.json();
+                const data1d = await res1d.json();
+
+                if(data1h.result && data1d.result) {
+                    const closes1h = data1h.result.map(c => c[4]);
+                    const closes1d = data1d.result.map(c => c[4]);
+
+                    // Resample Logic
+                    const closes4h = resampleCandles(closes1h, 4);
+                    const closes3d = resampleCandles(closes1d, 3);
+                    const closes1w = resampleCandles(closes1d, 7);
+
+                    // Update UI Grid
+                    const scores = [];
+                    scores.push(processTimeframe('btc', '1 Hr', 0, closes1h, state.btc.current));
+                    scores.push(processTimeframe('btc', '4 Hr', 1, closes4h, state.btc.current));
+                    scores.push(processTimeframe('btc', '1 Day', 2, closes1d, state.btc.current));
+                    scores.push(processTimeframe('btc', '3 Day', 3, closes3d, state.btc.current));
+                    scores.push(processTimeframe('btc', '1 Week', 4, closes1w, state.btc.current));
+
+                    // Update Main Gauge (Average of 4H and 1D)
+                    const avgScore = (scores[1] + scores[2]) / 2;
+                    updateMainGauge('btc', avgScore);
+
+                    // Update Support/Res (Based on 1D)
+                    const lows = data1d.result.map(c=>c[3]);
+                    const highs = data1d.result.map(c=>c[2]);
+                    state.btc.support = Math.min(...lows.slice(-30));
+                    state.btc.resistance = Math.max(...highs.slice(-30));
+                    updateUIStats('btc');
+                }
+                document.getElementById('btc-mtf-status').innerText = "Updated";
+
+            } catch(e) {
+                console.error("BTC Logic Error", e);
+                document.getElementById('btc-mtf-status').innerText = "Retry in 10s";
+                if(state.btc.current === 0) { state.btc.current = 3350000; updateCalculations(); } // Fallback
+            }
+        }
+
+        // 2. Fetch MSTR Logic (Yahoo Finance)
+        async function updateMSTRLogic() {
+            document.getElementById('mstr-mtf-status').innerHTML = '<i class="fa-solid fa-spinner loading-spin mr-1"></i>Updating...';
+            try {
+                // Fetch 1H and 1D Data
+                const url1h = CORS_PROXY + encodeURIComponent("https://query1.finance.yahoo.com/v8/finance/chart/MSTR?interval=60m&range=1mo");
+                const url1d = CORS_PROXY + encodeURIComponent("https://query1.finance.yahoo.com/v8/finance/chart/MSTR?interval=1d&range=6mo");
+
+                const [res1h, res1d] = await Promise.all([fetch(url1h), fetch(url1d)]);
+                const json1h = await res1h.json();
+                const json1d = await res1d.json();
+
+                const quote1h = json1h.chart.result[0];
+                const quote1d = json1d.chart.result[0];
+
+                // Update Price
+                state.mstr.current = quote1d.meta.regularMarketPrice;
+                const prev = quote1d.meta.chartPreviousClose;
+                updatePriceUI('mstr', state.mstr.current, ((state.mstr.current-prev)/prev)*100, '$');
+
+                // Extract Clean Data
+                const getCloses = (q) => q.indicators.quote[0].close.filter(c => c !== null);
+                const closes1h = getCloses(quote1h);
+                const closes1d = getCloses(quote1d);
+
+                // Resample
+                const closes4h = resampleCandles(closes1h, 4); // Approx 4 hours (market hours)
+                const closes3d = resampleCandles(closes1d, 3);
+                const closes1w = resampleCandles(closes1d, 5); // 5 trading days = 1 week approx
+
+                // Update UI Grid
+                const scores = [];
+                scores.push(processTimeframe('mstr', '1 Hr', 0, closes1h, state.mstr.current));
+                scores.push(processTimeframe('mstr', '4 Hr', 1, closes4h, state.mstr.current));
+                scores.push(processTimeframe('mstr', '1 Day', 2, closes1d, state.mstr.current));
+                scores.push(processTimeframe('mstr', '3 Day', 3, closes3d, state.mstr.current));
+                scores.push(processTimeframe('mstr', '1 Week', 4, closes1w, state.mstr.current));
+
+                // Update Main Gauge
+                const avgScore = (scores[1] + scores[2]) / 2;
+                updateMainGauge('mstr', avgScore);
+
+                 // Update Support/Res
+                const lows = quote1d.indicators.quote[0].low.filter(c => c !== null);
+                const highs = quote1d.indicators.quote[0].high.filter(c => c !== null);
+                state.mstr.support = Math.min(...lows.slice(-20));
+                state.mstr.resistance = Math.max(...highs.slice(-20));
+                updateUIStats('mstr');
+                
+                document.getElementById('mstr-mtf-status').innerText = "Updated";
+                updateCalculations();
+
+            } catch(e) {
+                console.error("MSTR Logic Error", e);
+                document.getElementById('mstr-mtf-status').innerText = "Retry in 1m";
+            }
+        }
 
         async function fetchFX() {
             try {
@@ -260,80 +380,89 @@
                 const data = await res.json();
                 state.exchangeRate = data.rates.THB;
                 document.getElementById('fx-rate').innerText = state.exchangeRate.toFixed(2);
-            } catch(e) { console.warn("FX Error"); }
+            } catch(e) {}
         }
 
-        async function fetchBTC() {
-            try {
-                // Fetch Data via Proxy
-                const tRes = await fetch(BITKUB_API);
-                const tData = await tRes.json();
-                
-                if(tData && tData.THB_BTC) {
-                    const price = tData.THB_BTC.last;
-                    const change = tData.THB_BTC.percentChange;
-                    state.btc.current = price;
-                    updatePriceUI('btc', price, change, '฿');
-                    
-                    // Fetch Candles for Wyckoff Logic
-                    const cRes = await fetch(BITKUB_CANDLES);
-                    const cData = await cRes.json();
-                    if(cData.result) {
-                        state.btc.history = cData.result.map(c=>c[4]);
-                        const lows = cData.result.map(c=>c[3]);
-                        const highs = cData.result.map(c=>c[2]);
-                        state.btc.support = Math.min(...lows);
-                        state.btc.resistance = Math.max(...highs);
-                        updateUIStats('btc');
-                        runWyckoffLogic('btc', state.btc.history, state.btc.current, state.btc.support);
-                    }
-                }
-            } catch(e) { 
-                console.error("Bitkub Logic Error (Proxy may be busy)", e);
-                // ถ้า Proxy ล่ม ให้ใช้ข้อมูลสำรองเพื่อให้ตารางคำนวณทำงานได้ (แต่กราฟยัง Real-time เพราะมาจาก Widget)
-                if(state.btc.current === 0) {
-                    state.btc.current = 3300000; // Fallback price
-                    document.getElementById('btc-price').innerText = "Simulating (Logic Only)";
-                    updateCalculations();
-                }
+        // --- LOGIC ENGINE ---
+
+        function resampleCandles(closes, period) {
+            // Simple resampling: Take every Nth close
+            // Better: We should ideally take the close of the Nth candle, but simpler is fine for logic estimation
+            let resampled = [];
+            for (let i = period - 1; i < closes.length; i += period) {
+                resampled.push(closes[i]);
             }
+            // If data is short, return original
+            return resampled.length > 10 ? resampled : closes;
         }
 
-        async function fetchMSTR() {
-            try {
-                const res = await fetch(YAHOO_MSTR_API);
-                const data = await res.json();
-                
-                if(data.chart && data.chart.result) {
-                    const meta = data.chart.result[0].meta;
-                    const quotes = data.chart.result[0].indicators.quote[0];
-                    const price = meta.regularMarketPrice;
-                    const prevClose = meta.chartPreviousClose;
-                    const changePct = ((price - prevClose)/prevClose)*100;
-                    
-                    state.mstr.current = price;
-                    updatePriceUI('mstr', price, changePct, '$');
-
-                    // Data for Logic
-                    const closes = quotes.close.filter(c => c !== null);
-                    const lows = quotes.low.filter(c => c !== null);
-                    const highs = quotes.high.filter(c => c !== null);
-                    state.mstr.history = closes.slice(-50);
-                    state.mstr.support = Math.min(...lows.slice(-20));
-                    state.mstr.resistance = Math.max(...highs.slice(-20));
-                    
-                    updateUIStats('mstr');
-                    runWyckoffLogic('mstr', state.mstr.history, state.mstr.current, state.mstr.support);
-                    updateCalculations();
-                }
-            } catch(e) { 
-                console.error("MSTR Error", e);
-                if(state.mstr.current === 0) state.mstr.current = 160;
-                updateCalculations();
+        function calculateRSI(prices, period=14) {
+            if(prices.length < period + 1) return 50;
+            let gains = 0, losses = 0;
+            for(let i = prices.length - period; i < prices.length; i++) {
+                let diff = prices[i] - prices[i - 1];
+                if(diff >= 0) gains += diff; else losses -= diff;
             }
+            if(losses === 0) return 100;
+            return 100 - (100 / (1 + (gains / losses)));
         }
 
-        // --- HELPERS ---
+        function calculateWyckoffScore(current, history) {
+            const rsi = calculateRSI(history);
+            // Dynamic Support from recent history
+            const lookback = Math.min(history.length, 30);
+            const recent = history.slice(-lookback);
+            const support = Math.min(...recent);
+            
+            let score = 50; // Base
+            const dist = ((current - support) / support) * 100;
+
+            // Scoring Logic
+            if (dist < 2) score += 30; // Close to support (Spring potential)
+            else if (dist < 5) score += 15;
+            else if (dist > 15) score -= 10; // Too high
+
+            if (rsi < 35) score += 20; // Oversold
+            else if (rsi > 70) score -= 20; // Overbought
+            else if (rsi > 50) score += 5; // Momentum
+
+            return Math.max(0, Math.min(100, Math.round(score)));
+        }
+
+        function processTimeframe(asset, label, index, history, current) {
+            const score = calculateWyckoffScore(current, history);
+            const container = document.getElementById(`${asset}-tf-grid`);
+            const boxes = container.getElementsByClassName('tf-box');
+            
+            // Color Logic
+            let colorClass = "text-slate-500";
+            if (score >= 70) colorClass = "text-green-400";
+            else if (score >= 50) colorClass = "text-yellow-400";
+            else if (score < 40) colorClass = "text-red-400";
+
+            boxes[index].innerHTML = `<span class="tf-label">${label}</span><span class="tf-score ${colorClass}">${score}</span>`;
+            return score;
+        }
+
+        function updateMainGauge(id, score) {
+            score = Math.round(score);
+            document.getElementById(`${id}-score-text`).innerText = `${score}/100`;
+            const g = document.getElementById(`${id}-gauge`);
+            g.style.width = `${score}%`;
+            
+            let rec = "WAIT";
+            let color = "bg-slate-500";
+            
+            if(score >= 75) { rec = "STRONG BUY (SC/Spring)"; color = "bg-green-500"; }
+            else if(score >= 60) { rec = "ACCUMULATE (Phase B)"; color = "bg-yellow-400"; }
+            else if(score <= 40) { rec = "DISTRIBUTION / SELL"; color = "bg-red-500"; }
+            else { rec = "NEUTRAL / HOLD"; color = "bg-slate-500"; }
+
+            g.className = `gauge-fill ${color}`;
+            document.getElementById(`${id}-recommendation`).innerText = rec;
+        }
+
+        // --- UI & CALCULATIONS ---
         function updatePriceUI(id, price, changePct, symbol) {
             const pEl = document.getElementById(`${id}-price`);
             pEl.innerText = `${symbol}${price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
@@ -346,43 +475,6 @@
         function updateUIStats(id) {
             document.getElementById(`${id}-support`).innerText = (id==='btc'?'฿':'$') + state[id].support.toLocaleString(undefined,{maximumFractionDigits:0});
             document.getElementById(`${id}-res`).innerText = (id==='btc'?'฿':'$') + state[id].resistance.toLocaleString(undefined,{maximumFractionDigits:0});
-        }
-
-        function calculateRSI(prices, period=14) {
-            if(prices.length < period+1) return 50;
-            let gains=0, losses=0;
-            for(let i=prices.length-period; i<prices.length; i++) {
-                let diff = prices[i] - prices[i-1];
-                if(diff>=0) gains+=diff; else losses-=diff;
-            }
-            if(losses===0) return 100;
-            return 100 - (100/(1+(gains/losses)));
-        }
-
-        function runWyckoffLogic(id, history, current, support) {
-            const rsi = calculateRSI(history);
-            let score = 50;
-            const dist = ((current-support)/support)*100;
-            
-            // Logic
-            if(dist < 2) score += 30; // Near Support
-            else if(dist < 5) score += 10;
-            if(rsi < 35) score += 20; 
-            if(rsi > 70) score -= 20;
-            score = Math.max(0, Math.min(100, score));
-
-            // UI
-            document.getElementById(`${id}-rsi`).innerText = rsi.toFixed(1);
-            document.getElementById(`${id}-score-text`).innerText = `${Math.floor(score)}/100`;
-            const g = document.getElementById(`${id}-gauge`);
-            g.style.width = `${score}%`;
-            g.className = `gauge-fill ${score>70?'bg-green-500':(score<40?'bg-red-500':'bg-yellow-500')}`;
-            
-            let rec = "WAIT";
-            if(score>75) rec = "STRONG BUY (Zone SC)";
-            else if(score>60) rec = "ACCUMULATE (Zone ST)";
-            else if(score<40) rec = "AVOID / SELL";
-            document.getElementById(`${id}-recommendation`).innerText = rec;
         }
 
         function updateCalculations() {
@@ -422,11 +514,14 @@
         // --- STARTUP ---
         initTradingView();
         fetchFX();
-        fetchBTC();
-        fetchMSTR();
         
-        setInterval(fetchBTC, 10000); 
-        setInterval(fetchMSTR, 60000);
+        // Initial Fetch
+        updateBTCLogic();
+        updateMSTRLogic();
+
+        // Loop (Less frequent to avoid bans)
+        setInterval(updateBTCLogic, 20000); // 20s
+        setInterval(updateMSTRLogic, 60000); // 60s
         updateAllocationDisplay();
 
     </script>
