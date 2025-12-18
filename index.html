@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wyckoff Logic Pro: TradingView Edition</title>
+    <title>Wyckoff Logic Pro: Full TradingView Edition</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
@@ -42,7 +40,7 @@
         .ladder-table td { padding: 8px; font-size: 0.85rem; border-bottom: 1px solid #1e293b; }
 
         /* TradingView Widget Container */
-        .tv-widget-container { height: 300px; width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid #334155; }
+        .tv-widget-container { height: 320px; width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid #334155; margin-top: 1rem; }
     </style>
 </head>
 <body class="min-h-screen p-2 md:p-4 pb-32 max-w-7xl mx-auto">
@@ -52,7 +50,7 @@
             <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400">
                 <i class="fa-solid fa-layer-group mr-2"></i>Wyckoff Logic Pro
             </h1>
-            <p class="text-xs text-slate-400">TradingView Chart & Live Data Integration</p>
+            <p class="text-xs text-slate-400">Full TradingView Integration (Real Graphs)</p>
         </div>
         
         <div class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-3">
@@ -67,7 +65,7 @@
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <h2 class="text-xl font-bold text-yellow-500">BTC / THB</h2>
-                    <p class="text-xs text-slate-400">Bitkub Exchange (Live)</p>
+                    <p class="text-xs text-slate-400">Bitkub Exchange (Via TradingView)</p>
                 </div>
                 <div class="text-right">
                     <div id="btc-price" class="text-2xl font-mono font-bold text-white">Loading...</div>
@@ -88,9 +86,7 @@
                 <p id="btc-recommendation" class="text-xs mt-2 text-center text-green-400 font-bold">Waiting...</p>
             </div>
 
-            <div class="h-48 w-full">
-                <canvas id="btcChart"></canvas>
-            </div>
+            <div class="tv-widget-container" id="tv-btc-container"></div>
             
             <div class="mt-3 grid grid-cols-2 gap-2 text-center">
                 <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Support</div><div class="text-xs font-mono text-green-400" id="btc-support">-</div></div>
@@ -102,7 +98,7 @@
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <h2 class="text-xl font-bold text-red-500">MSTR</h2>
-                    <p class="text-xs text-slate-400">NASDAQ (Real-time via Proxy)</p>
+                    <p class="text-xs text-slate-400">NASDAQ (Via TradingView)</p>
                 </div>
                 <div class="text-right">
                     <div id="mstr-price" class="text-2xl font-mono font-bold text-white">Loading...</div>
@@ -123,9 +119,7 @@
                 <p id="mstr-recommendation" class="text-xs mt-2 text-center text-green-400 font-bold">Waiting...</p>
             </div>
 
-            <div class="tv-widget-container" id="tv-chart-container">
-                <div class="flex items-center justify-center h-full text-xs text-slate-500">Loading TradingView...</div>
-            </div>
+            <div class="tv-widget-container" id="tv-mstr-container"></div>
 
             <div class="mt-3 grid grid-cols-2 gap-2 text-center">
                 <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Support</div><div class="text-xs font-mono text-green-400" id="mstr-support">-</div></div>
@@ -196,11 +190,13 @@
 
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        // --- CONFIG ---
-        // ใช้ CORS Proxy เพื่อดึงข้อมูล Yahoo Finance (ฟรี) มาใช้ในการคำนวณ Logic
-        const YAHOO_MSTR_API = "https://corsproxy.io/?https://query1.finance.yahoo.com/v8/finance/chart/MSTR?interval=1d&range=3mo";
-        const BITKUB_API = "https://api.bitkub.com/api/market/ticker?sym=THB_BTC";
-        const BITKUB_CANDLES = "https://api.bitkub.com/api/market/candles?sym=THB_BTC&int=60&lmt=50";
+        // --- PROXY CONFIG (To bypass CORS blocking) ---
+        // ใช้ Proxy เพื่อให้ Browser สามารถดึงข้อมูลจาก Bitkub/Yahoo ได้จริงโดยไม่ติด Block
+        const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+        
+        const BITKUB_API = CORS_PROXY + encodeURIComponent("https://api.bitkub.com/api/market/ticker?sym=THB_BTC");
+        const BITKUB_CANDLES = CORS_PROXY + encodeURIComponent("https://api.bitkub.com/api/market/candles?sym=THB_BTC&int=60&lmt=50");
+        const YAHOO_MSTR_API = CORS_PROXY + encodeURIComponent("https://query1.finance.yahoo.com/v8/finance/chart/MSTR?interval=1d&range=3mo");
 
         // State Management
         const state = {
@@ -208,8 +204,8 @@
             allocation: 70,
             exchangeRate: 34.50, 
             strategy: 'wyckoff',
-            btc: { current: 0, history: [], support: 0, resistance: 0, loaded: false },
-            mstr: { current: 160.00, history: [], support: 150.00, resistance: 180.00, loaded: false } 
+            btc: { current: 0, history: [], support: 0, resistance: 0 },
+            mstr: { current: 160.00, history: [], support: 150.00, resistance: 180.00 } 
         };
 
         const strategies = {
@@ -218,17 +214,26 @@
             pyramid: { name: "Pyramid Dip", desc: "ยิ่งลงยิ่งซื้อเยอะ", steps: [{pct:0.2, offset:0, label:"Test"}, {pct:0.3, offset:-0.04, label:"Dip"}, {pct:0.5, offset:-0.08, label:"Bottom"}] }
         };
 
-        // --- INIT CHARTS & WIDGETS ---
-        
-        // 1. Bitkub Chart (Chart.js)
-        const btcChart = new Chart(document.getElementById('btcChart').getContext('2d'), {
-            type: 'line',
-            data: { labels: [], datasets: [{ data: [], borderColor: '#eab308', borderWidth: 2, tension: 0.3, pointRadius: 0, fill: {target:'origin', above:'#eab30822'} }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: {legend:{display:false}}, scales: {x:{display:false}, y:{display:false}}, animation: false }
-        });
-
-        // 2. TradingView Widget for MSTR (The Real Chart)
+        // --- INIT TRADINGVIEW WIDGETS ---
         function initTradingView() {
+            // 1. BTC (Bitkub)
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": "BITKUB:BTCTHB",
+                "interval": "60",
+                "timezone": "Asia/Bangkok",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "toolbar_bg": "#f1f3f6",
+                "enable_publishing": false,
+                "hide_top_toolbar": true,
+                "hide_legend": false,
+                "container_id": "tv-btc-container",
+                "backgroundColor": "rgba(15, 23, 42, 1)"
+            });
+
+            // 2. MSTR (NASDAQ)
             new TradingView.widget({
                 "autosize": true,
                 "symbol": "NASDAQ:MSTR",
@@ -241,15 +246,14 @@
                 "enable_publishing": false,
                 "hide_top_toolbar": true,
                 "hide_legend": false,
-                "save_image": false,
-                "container_id": "tv-chart-container",
+                "container_id": "tv-mstr-container",
                 "backgroundColor": "rgba(15, 23, 42, 1)"
             });
         }
 
-        // --- DATA FETCHING ---
+        // --- DATA FETCHING (LOGIC ONLY) ---
+        // เราใช้ข้อมูลตรงนี้เพื่อคำนวณ Wyckoff Score และ Buy Ladder เท่านั้น (กราฟดูจาก Widget แทน)
 
-        // Fetch USD/THB
         async function fetchFX() {
             try {
                 const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
@@ -259,91 +263,77 @@
             } catch(e) { console.warn("FX Error"); }
         }
 
-        // Fetch BTC from Bitkub
         async function fetchBTC() {
             try {
-                // Price
+                // Fetch Data via Proxy
                 const tRes = await fetch(BITKUB_API);
                 const tData = await tRes.json();
+                
                 if(tData && tData.THB_BTC) {
                     const price = tData.THB_BTC.last;
                     const change = tData.THB_BTC.percentChange;
                     state.btc.current = price;
                     updatePriceUI('btc', price, change, '฿');
                     
-                    // Candles (Once or Update)
-                    if(state.btc.history.length === 0) {
-                        const cRes = await fetch(BITKUB_CANDLES);
-                        const cData = await cRes.json();
-                        if(cData.result) {
-                            state.btc.history = cData.result.map(c=>c[4]);
-                            const lows = cData.result.map(c=>c[3]);
-                            state.btc.support = Math.min(...lows.slice(-20));
-                            state.btc.resistance = Math.max(...cData.result.map(c=>c[2]).slice(-20));
-                            updateUIStats('btc');
-                        }
-                    } else {
-                        state.btc.history.push(price);
-                        if(state.btc.history.length>50) state.btc.history.shift();
+                    // Fetch Candles for Wyckoff Logic
+                    const cRes = await fetch(BITKUB_CANDLES);
+                    const cData = await cRes.json();
+                    if(cData.result) {
+                        state.btc.history = cData.result.map(c=>c[4]);
+                        const lows = cData.result.map(c=>c[3]);
+                        const highs = cData.result.map(c=>c[2]);
+                        state.btc.support = Math.min(...lows);
+                        state.btc.resistance = Math.max(...highs);
+                        updateUIStats('btc');
+                        runWyckoffLogic('btc', state.btc.history, state.btc.current, state.btc.support);
                     }
-                    updateChart(btcChart, state.btc.history);
-                    runWyckoffLogic('btc', state.btc.history, state.btc.current, state.btc.support);
                 }
-            } catch(e) { console.error("Bitkub Error", e); }
+            } catch(e) { 
+                console.error("Bitkub Logic Error (Proxy may be busy)", e);
+                // ถ้า Proxy ล่ม ให้ใช้ข้อมูลสำรองเพื่อให้ตารางคำนวณทำงานได้ (แต่กราฟยัง Real-time เพราะมาจาก Widget)
+                if(state.btc.current === 0) {
+                    state.btc.current = 3300000; // Fallback price
+                    document.getElementById('btc-price').innerText = "Simulating (Logic Only)";
+                    updateCalculations();
+                }
+            }
         }
 
-        // Fetch MSTR Real Data (via Yahoo Proxy for Logic)
         async function fetchMSTR() {
             try {
-                // Note: Yahoo API via Proxy is the most stable free way to get raw JSON for logic
                 const res = await fetch(YAHOO_MSTR_API);
                 const data = await res.json();
                 
                 if(data.chart && data.chart.result) {
                     const meta = data.chart.result[0].meta;
                     const quotes = data.chart.result[0].indicators.quote[0];
-                    
                     const price = meta.regularMarketPrice;
                     const prevClose = meta.chartPreviousClose;
                     const changePct = ((price - prevClose)/prevClose)*100;
                     
                     state.mstr.current = price;
-                    state.mstr.loaded = true;
+                    updatePriceUI('mstr', price, changePct, '$');
 
-                    // Clean Data for Logic (remove nulls)
+                    // Data for Logic
                     const closes = quotes.close.filter(c => c !== null);
                     const lows = quotes.low.filter(c => c !== null);
                     const highs = quotes.high.filter(c => c !== null);
-
-                    state.mstr.history = closes.slice(-50); // Keep last 50 for RSI calc
-                    state.mstr.support = Math.min(...lows.slice(-20)); // Local support
+                    state.mstr.history = closes.slice(-50);
+                    state.mstr.support = Math.min(...lows.slice(-20));
                     state.mstr.resistance = Math.max(...highs.slice(-20));
-
-                    updatePriceUI('mstr', price, changePct, '$');
+                    
                     updateUIStats('mstr');
                     runWyckoffLogic('mstr', state.mstr.history, state.mstr.current, state.mstr.support);
                     updateCalculations();
                 }
             } catch(e) { 
-                console.error("MSTR Data Error (Proxy)", e);
-                document.getElementById('mstr-price').innerText = "Simulating...";
-                // Fallback Simulation if Proxy fails
-                simulateMSTR();
+                console.error("MSTR Error", e);
+                if(state.mstr.current === 0) state.mstr.current = 160;
+                updateCalculations();
             }
         }
 
         // --- HELPERS ---
-        function simulateMSTR() {
-             // Fallback logic in case Yahoo proxy blocks
-             let change = (Math.random()-0.48) * 0.5;
-             state.mstr.current += change;
-             state.mstr.history.push(state.mstr.current);
-             if(state.mstr.history.length>50) state.mstr.history.shift();
-             updatePriceUI('mstr', state.mstr.current, (Math.random()-0.5)*2, '$');
-             runWyckoffLogic('mstr', state.mstr.history, state.mstr.current, state.mstr.support);
-             updateCalculations();
-        }
-
         function updatePriceUI(id, price, changePct, symbol) {
             const pEl = document.getElementById(`${id}-price`);
             pEl.innerText = `${symbol}${price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
@@ -356,13 +346,6 @@
         function updateUIStats(id) {
             document.getElementById(`${id}-support`).innerText = (id==='btc'?'฿':'$') + state[id].support.toLocaleString(undefined,{maximumFractionDigits:0});
             document.getElementById(`${id}-res`).innerText = (id==='btc'?'฿':'$') + state[id].resistance.toLocaleString(undefined,{maximumFractionDigits:0});
-        }
-
-        function updateChart(chart, data) {
-            chart.data.datasets[0].data = data;
-            chart.options.scales.y.min = Math.min(...data)*0.995;
-            chart.options.scales.y.max = Math.max(...data)*1.005;
-            chart.update();
         }
 
         function calculateRSI(prices, period=14) {
@@ -381,14 +364,14 @@
             let score = 50;
             const dist = ((current-support)/support)*100;
             
-            // Basic Wyckoff Scoring
-            if(dist < 2) score += 30; // Near Support (Spring/SC)
+            // Logic
+            if(dist < 2) score += 30; // Near Support
             else if(dist < 5) score += 10;
-            if(rsi < 35) score += 20; // Oversold
-            if(rsi > 70) score -= 20; // Overbought
-            
+            if(rsi < 35) score += 20; 
+            if(rsi > 70) score -= 20;
             score = Math.max(0, Math.min(100, score));
 
+            // UI
             document.getElementById(`${id}-rsi`).innerText = rsi.toFixed(1);
             document.getElementById(`${id}-score-text`).innerText = `${Math.floor(score)}/100`;
             const g = document.getElementById(`${id}-gauge`);
@@ -408,11 +391,10 @@
             const mstrAlloc = state.budget - btcAlloc;
             const strat = strategies[state.strategy];
 
-            // Labels
-            document.getElementById('btc-target-budget').innerText = "฿"+btcAlloc.toLocaleString({maximumFractionDigits:0});
-            document.getElementById('mstr-target-budget').innerText = "฿"+mstrAlloc.toLocaleString({maximumFractionDigits:0});
-            document.getElementById('btc-amt-display').innerText = "฿"+btcAlloc.toLocaleString({maximumFractionDigits:0});
-            document.getElementById('mstr-amt-display').innerText = "฿"+mstrAlloc.toLocaleString({maximumFractionDigits:0});
+            document.getElementById('btc-target-budget').innerText = "฿"+btcAlloc.toLocaleString(undefined, {maximumFractionDigits:0});
+            document.getElementById('mstr-target-budget').innerText = "฿"+mstrAlloc.toLocaleString(undefined, {maximumFractionDigits:0});
+            document.getElementById('btc-amt-display').innerText = "฿"+btcAlloc.toLocaleString(undefined, {maximumFractionDigits:0});
+            document.getElementById('mstr-amt-display').innerText = "฿"+mstrAlloc.toLocaleString(undefined, {maximumFractionDigits:0});
 
             // BTC Ladder
             const btcBody = document.getElementById('btc-ladder-body');
@@ -443,9 +425,8 @@
         fetchBTC();
         fetchMSTR();
         
-        // Loop
-        setInterval(fetchBTC, 10000); // 10s
-        setInterval(fetchMSTR, 60000); // Yahoo update every 1 min (don't spam proxy)
+        setInterval(fetchBTC, 10000); 
+        setInterval(fetchMSTR, 60000);
         updateAllocationDisplay();
 
     </script>
