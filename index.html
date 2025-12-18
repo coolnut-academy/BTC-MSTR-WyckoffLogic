@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wyckoff Logic Pro: Real-Time Edition</title>
+    <title>Wyckoff Logic Pro: TradingView Edition</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -19,106 +19,30 @@
             background-color: #0f172a; /* Slate 900 */
             color: #e2e8f0;
         }
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
         .card-gradient {
             background: linear-gradient(145deg, #1e293b, #0f172a);
             box-shadow: 5px 5px 10px #0b1120, -5px -5px 10px #27354d;
         }
         .input-dark {
-            background-color: #334155;
-            border: 1px solid #475569;
-            color: white;
-            transition: all 0.3s;
+            background-color: #334155; border: 1px solid #475569; color: white; transition: all 0.3s;
         }
-        .input-dark:focus {
-            border-color: #3b82f6;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-        }
+        .input-dark:focus { border-color: #3b82f6; outline: none; }
         .gauge-container {
-            position: relative;
-            width: 100%;
-            height: 12px;
-            background: #334155;
-            border-radius: 6px;
-            overflow: hidden;
+            position: relative; width: 100%; height: 12px; background: #334155; border-radius: 6px; overflow: hidden;
         }
-        .gauge-fill {
-            height: 100%;
-            transition: width 0.5s ease-in-out, background-color 0.5s;
-        }
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
+        .gauge-fill { height: 100%; transition: width 0.5s ease-in-out, background-color 0.5s; }
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
         input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 16px;
-            width: 16px;
-            border-radius: 50%;
-            background: #3b82f6;
-            cursor: pointer;
-            margin-top: -6px;
-            box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #3b82f6; cursor: pointer; margin-top: -6px;
         }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 4px;
-            cursor: pointer;
-            background: #475569;
-            border-radius: 2px;
-        }
-        .blink { animation: blinker 1.5s linear infinite; }
-        @keyframes blinker { 50% { opacity: 0; } }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #475569; }
         
-        .ladder-table th {
-            text-align: left;
-            padding: 8px;
-            font-size: 0.75rem;
-            color: #94a3b8;
-            border-bottom: 1px solid #334155;
-        }
-        .ladder-table td {
-            padding: 8px;
-            font-size: 0.85rem;
-            border-bottom: 1px solid #1e293b;
-        }
-        
-        /* Modal & Toast */
-        .modal {
-            display: none; position: fixed; z-index: 50; left: 0; top: 0;
-            width: 100%; height: 100%; overflow: auto; 
-            background-color: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
-            align-items: center; justify-content: center;
-        }
-        .modal-content {
-            background-color: #1e293b; padding: 24px; border: 1px solid #475569;
-            width: 90%; max-width: 400px; border-radius: 16px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: modalPop 0.3s ease-out;
-        }
-        @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .ladder-table th { text-align: left; padding: 8px; font-size: 0.75rem; color: #94a3b8; border-bottom: 1px solid #334155; }
+        .ladder-table td { padding: 8px; font-size: 0.85rem; border-bottom: 1px solid #1e293b; }
 
-        .toast {
-            visibility: hidden; min-width: 300px; background-color: #1e293b; color: #fff;
-            text-align: center; border-radius: 12px; padding: 16px;
-            position: fixed; z-index: 100; right: 20px; top: 20px; font-size: 14px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); border-left: 6px solid #333;
-            transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .toast.show { visibility: visible; transform: translateX(0); }
-        .toast.success { border-left-color: #22c55e; }
-        .toast.error { border-left-color: #ef4444; }
-
-        /* Timeframe Grid */
-        .tf-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 12px; }
-        .tf-box { background: #334155; border-radius: 4px; padding: 4px; text-align: center; font-size: 0.65rem; color: #94a3b8; }
-        .tf-score { font-weight: bold; font-size: 0.8rem; margin-top: 2px; }
-        .tf-label { text-transform: uppercase; font-size: 0.6rem; }
-        @media (max-width: 768px) { .tf-grid { grid-template-columns: repeat(4, 1fr); } }
+        /* TradingView Widget Container */
+        .tv-widget-container { height: 300px; width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid #334155; }
     </style>
 </head>
 <body class="min-h-screen p-2 md:p-4 pb-32 max-w-7xl mx-auto">
@@ -128,131 +52,84 @@
             <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400">
                 <i class="fa-solid fa-layer-group mr-2"></i>Wyckoff Logic Pro
             </h1>
-            <p class="text-xs text-slate-400">Ultimate Asset Allocation & Analysis Console (Real-Time)</p>
+            <p class="text-xs text-slate-400">TradingView Chart & Live Data Integration</p>
         </div>
         
         <div class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-3">
             <div class="text-xs text-slate-400"><i class="fa-solid fa-money-bill-transfer mr-1"></i>USD/THB</div>
             <div class="text-lg font-mono font-bold text-yellow-400" id="fx-rate">...</div>
-            <div class="text-[10px] text-slate-500 flex items-center">
-                <span id="fx-status" class="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-1 blink"></span>
-                <span id="fx-source">Loading...</span>
-            </div>
         </div>
     </header>
 
     <section class="grid md:grid-cols-2 gap-6 mb-8">
+        
         <div id="btc-card" class="card-gradient rounded-2xl p-5 border-l-4 border-yellow-500 relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-2 opacity-10"><i class="fa-brands fa-bitcoin text-8xl"></i></div>
-            
-            <div class="flex justify-between items-start mb-4 relative z-10">
+            <div class="flex justify-between items-start mb-4">
                 <div>
                     <h2 class="text-xl font-bold text-yellow-500">BTC / THB</h2>
-                    <p class="text-xs text-slate-400 flex items-center gap-1">
-                        <img src="https://www.bitkub.com/static/images/logo-white.svg" class="h-3 opacity-70"> Bitkub Exchange (Live)
-                    </p>
+                    <p class="text-xs text-slate-400">Bitkub Exchange (Live)</p>
                 </div>
                 <div class="text-right">
-                    <div id="btc-price" class="text-2xl font-mono font-bold text-white transition-all">Loading...</div>
+                    <div id="btc-price" class="text-2xl font-mono font-bold text-white">Loading...</div>
                     <div id="btc-change" class="text-xs font-bold text-slate-500">...</div>
                 </div>
             </div>
 
             <div class="bg-slate-900/50 rounded-lg p-3 mb-4 backdrop-blur-sm border border-slate-700">
                 <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-400">RSI (14)</span>
-                    <span id="btc-rsi" class="font-bold text-yellow-300">-</span>
+                    <span class="text-slate-400">RSI (14)</span><span id="btc-rsi" class="font-bold text-yellow-300">-</span>
                 </div>
                 <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-400">Wyckoff Phase</span>
-                    <span id="btc-phase" class="font-bold text-blue-300">-</span>
+                    <span class="text-slate-400">Score</span><span id="btc-score-text" class="font-bold text-white">0/100</span>
                 </div>
-                <div class="mt-3">
-                    <div class="flex justify-between text-xs mb-1">
-                        <span class="text-slate-300">Wyckoff Buy Score</span>
-                        <span id="btc-score-text" class="font-bold text-white">0/100</span>
-                    </div>
-                    <div class="gauge-container">
-                        <div id="btc-gauge" class="gauge-fill bg-slate-500" style="width: 0%;"></div>
-                    </div>
-                    <p id="btc-recommendation" class="text-xs mt-2 text-center text-green-400 font-bold">Waiting for data...</p>
+                <div class="gauge-container mt-1">
+                    <div id="btc-gauge" class="gauge-fill bg-slate-500" style="width: 0%;"></div>
                 </div>
+                <p id="btc-recommendation" class="text-xs mt-2 text-center text-green-400 font-bold">Waiting...</p>
             </div>
 
-            <div class="h-32 w-full">
+            <div class="h-48 w-full">
                 <canvas id="btcChart"></canvas>
             </div>
             
-             <div class="mt-4 border-t border-slate-700 pt-3">
-                <div class="text-[10px] text-slate-400 font-bold mb-1"><i class="fa-solid fa-clock mr-1"></i>TF Score (Simulated for Demo)</div>
-                <div id="btc-tf-container" class="tf-grid"></div>
-             </div>
-
             <div class="mt-3 grid grid-cols-2 gap-2 text-center">
-                <div class="bg-slate-800 rounded p-1">
-                    <div class="text-[10px] text-slate-400">Support</div>
-                    <div class="text-xs font-mono text-green-400" id="btc-support">-</div>
-                </div>
-                <div class="bg-slate-800 rounded p-1">
-                    <div class="text-[10px] text-slate-400">Resistance</div>
-                    <div class="text-xs font-mono text-red-400" id="btc-res">-</div>
-                </div>
+                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Support</div><div class="text-xs font-mono text-green-400" id="btc-support">-</div></div>
+                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Resistance</div><div class="text-xs font-mono text-red-400" id="btc-res">-</div></div>
             </div>
         </div>
 
         <div id="mstr-card" class="card-gradient rounded-2xl p-5 border-l-4 border-red-500 relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-2 opacity-10"><i class="fa-solid fa-building-columns text-8xl"></i></div>
-
-            <div class="flex justify-between items-start mb-4 relative z-10">
+            <div class="flex justify-between items-start mb-4">
                 <div>
                     <h2 class="text-xl font-bold text-red-500">MSTR</h2>
-                    <p class="text-xs text-slate-400">NASDAQ (Simulated Data*)</p>
+                    <p class="text-xs text-slate-400">NASDAQ (Real-time via Proxy)</p>
                 </div>
                 <div class="text-right">
-                    <div id="mstr-price" class="text-2xl font-mono font-bold text-white transition-all">$...</div>
+                    <div id="mstr-price" class="text-2xl font-mono font-bold text-white">Loading...</div>
                     <div id="mstr-change" class="text-xs font-bold text-slate-500">...</div>
                 </div>
             </div>
 
             <div class="bg-slate-900/50 rounded-lg p-3 mb-4 backdrop-blur-sm border border-slate-700">
                 <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-400">RSI (14)</span>
-                    <span id="mstr-rsi" class="font-bold text-red-300">-</span>
+                    <span class="text-slate-400">RSI (14)</span><span id="mstr-rsi" class="font-bold text-red-300">-</span>
                 </div>
                 <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-400">Wyckoff Phase</span>
-                    <span id="mstr-phase" class="font-bold text-purple-300">-</span>
+                    <span class="text-slate-400">Score</span><span id="mstr-score-text" class="font-bold text-white">0/100</span>
                 </div>
-                <div class="mt-3">
-                    <div class="flex justify-between text-xs mb-1">
-                        <span class="text-slate-300">Wyckoff Buy Score</span>
-                        <span id="mstr-score-text" class="font-bold text-white">0/100</span>
-                    </div>
-                    <div class="gauge-container">
-                        <div id="mstr-gauge" class="gauge-fill bg-slate-500" style="width: 0%;"></div>
-                    </div>
-                    <p id="mstr-recommendation" class="text-xs mt-2 text-center text-green-400 font-bold">Waiting...</p>
+                <div class="gauge-container mt-1">
+                    <div id="mstr-gauge" class="gauge-fill bg-slate-500" style="width: 0%;"></div>
                 </div>
+                <p id="mstr-recommendation" class="text-xs mt-2 text-center text-green-400 font-bold">Waiting...</p>
             </div>
 
-            <div class="h-32 w-full">
-                <canvas id="mstrChart"></canvas>
+            <div class="tv-widget-container" id="tv-chart-container">
+                <div class="flex items-center justify-center h-full text-xs text-slate-500">Loading TradingView...</div>
             </div>
-            
-             <div class="mt-4 border-t border-slate-700 pt-3">
-                <div class="text-[10px] text-slate-400 font-bold mb-1"><i class="fa-solid fa-clock mr-1"></i>TF Score</div>
-                <div id="mstr-tf-container" class="tf-grid"></div>
-             </div>
 
             <div class="mt-3 grid grid-cols-2 gap-2 text-center">
-                <div class="bg-slate-800 rounded p-1">
-                    <div class="text-[10px] text-slate-400">Support</div>
-                    <div class="text-xs font-mono text-green-400" id="mstr-support">-</div>
-                </div>
-                <div class="bg-slate-800 rounded p-1">
-                    <div class="text-[10px] text-slate-400">Resistance</div>
-                    <div class="text-xs font-mono text-red-400" id="mstr-res">-</div>
-                </div>
+                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Support</div><div class="text-xs font-mono text-green-400" id="mstr-support">-</div></div>
+                <div class="bg-slate-800 rounded p-1"><div class="text-[10px] text-slate-400">Resistance</div><div class="text-xs font-mono text-red-400" id="mstr-res">-</div></div>
             </div>
         </div>
     </section>
@@ -317,40 +194,11 @@
         </div>
     </div>
 
-    <section class="card-gradient rounded-2xl p-6 border border-slate-700 shadow-2xl relative">
-        <div class="absolute -top-3 left-6 bg-slate-900 px-3 py-1 rounded border border-blue-500 text-blue-400 text-xs font-bold uppercase"><i class="fa-solid fa-calculator mr-2"></i>Portfolio Tracker</div>
-        <div class="grid md:grid-cols-2 gap-8 mt-4">
-            <div class="border-b md:border-b-0 md:border-r border-slate-700 pb-6 md:pb-0 md:pr-6">
-                <h4 class="text-yellow-500 font-bold mb-4">Bitcoin (BTC) Status</h4>
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-[10px] text-slate-400 mb-1">เงินลงทุนรวม (THB)</label><input type="number" id="btc-invested" class="w-full input-dark rounded px-3 py-2 text-sm font-mono" oninput="calcTracker()"></div>
-                    <div><label class="block text-[10px] text-slate-400 mb-1">เหรียญที่มี (BTC)</label><input type="number" id="btc-amount" step="0.000001" class="w-full input-dark rounded px-3 py-2 text-sm font-mono" oninput="calcTracker()"></div>
-                </div>
-                <div class="mt-4 bg-slate-800 rounded p-3 grid grid-cols-2 gap-4">
-                    <div><div class="text-[10px] text-slate-500">Avg Cost</div><div id="btc-avg-cost" class="font-mono text-sm text-slate-300">-</div></div>
-                    <div class="text-right"><div class="text-[10px] text-slate-500">Unrealized P/L</div><div id="btc-pl" class="font-mono font-bold text-sm text-slate-300">-</div></div>
-                </div>
-            </div>
-            <div>
-                <h4 class="text-red-500 font-bold mb-4">MSTR Status</h4>
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-[10px] text-slate-400 mb-1">เงินลงทุนรวม (THB)</label><input type="number" id="mstr-invested" class="w-full input-dark rounded px-3 py-2 text-sm font-mono" oninput="calcTracker()"></div>
-                    <div><label class="block text-[10px] text-slate-400 mb-1">หุ้นที่มี (Share)</label><input type="number" id="mstr-amount" step="0.01" class="w-full input-dark rounded px-3 py-2 text-sm font-mono" oninput="calcTracker()"></div>
-                </div>
-                <div class="mt-4 bg-slate-800 rounded p-3 grid grid-cols-2 gap-4">
-                    <div><div class="text-[10px] text-slate-500">Avg Cost</div><div id="mstr-avg-cost" class="font-mono text-sm text-slate-300">-</div></div>
-                    <div class="text-right"><div class="text-[10px] text-slate-500">Unrealized P/L</div><div id="mstr-pl" class="font-mono font-bold text-sm text-slate-300">-</div></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div id="confirmModal" class="modal"><div class="modal-content text-center"><h3 class="text-lg font-bold text-white">ยืนยันการ Sync?</h3><p class="text-sm text-slate-400 mb-4">ส่งข้อมูลไปยัง Google Sheet</p><button onclick="executeSync()" class="px-5 py-2 bg-green-600 rounded text-white">ยืนยัน</button><button onclick="closeConfirmModal()" class="px-5 py-2 ml-2 border border-slate-600 rounded text-slate-300">ยกเลิก</button></div></div>
-    <div id="toast" class="toast"><div class="flex items-center gap-3"><div id="toast-icon"></div><div><h4 id="toast-title" class="font-bold text-sm"></h4><p id="toast-msg" class="text-xs text-slate-300"></p></div></div></div>
-
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        // --- CONSTANTS & CONFIG ---
-        const WEB_APP_URL = ""; // ใส่ URL Google Script ของคุณที่นี่
+        // --- CONFIG ---
+        // ใช้ CORS Proxy เพื่อดึงข้อมูล Yahoo Finance (ฟรี) มาใช้ในการคำนวณ Logic
+        const YAHOO_MSTR_API = "https://corsproxy.io/?https://query1.finance.yahoo.com/v8/finance/chart/MSTR?interval=1d&range=3mo";
         const BITKUB_API = "https://api.bitkub.com/api/market/ticker?sym=THB_BTC";
         const BITKUB_CANDLES = "https://api.bitkub.com/api/market/candles?sym=THB_BTC&int=60&lmt=50";
 
@@ -358,10 +206,10 @@
         const state = {
             budget: 567000,
             allocation: 70,
-            exchangeRate: 34.50, // Default fallback
+            exchangeRate: 34.50, 
             strategy: 'wyckoff',
             btc: { current: 0, history: [], support: 0, resistance: 0, loaded: false },
-            mstr: { current: 165.00, history: [], support: 150.00, resistance: 180.00 } // MSTR Simulated base
+            mstr: { current: 160.00, history: [], support: 150.00, resistance: 180.00, loaded: false } 
         };
 
         const strategies = {
@@ -370,148 +218,151 @@
             pyramid: { name: "Pyramid Dip", desc: "ยิ่งลงยิ่งซื้อเยอะ", steps: [{pct:0.2, offset:0, label:"Test"}, {pct:0.3, offset:-0.04, label:"Dip"}, {pct:0.5, offset:-0.08, label:"Bottom"}] }
         };
 
-        // --- CHARTS SETUP ---
-        function createChart(ctx, color) {
-            return new Chart(ctx, {
-                type: 'line',
-                data: { labels: [], datasets: [{ data: [], borderColor: color, borderWidth: 2, tension: 0.3, pointRadius: 0, fill: {target:'origin', above:color+'22'} }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: {legend:{display:false}}, scales: {x:{display:false}, y:{display:false}}, animation: false }
+        // --- INIT CHARTS & WIDGETS ---
+        
+        // 1. Bitkub Chart (Chart.js)
+        const btcChart = new Chart(document.getElementById('btcChart').getContext('2d'), {
+            type: 'line',
+            data: { labels: [], datasets: [{ data: [], borderColor: '#eab308', borderWidth: 2, tension: 0.3, pointRadius: 0, fill: {target:'origin', above:'#eab30822'} }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: {legend:{display:false}}, scales: {x:{display:false}, y:{display:false}}, animation: false }
+        });
+
+        // 2. TradingView Widget for MSTR (The Real Chart)
+        function initTradingView() {
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": "NASDAQ:MSTR",
+                "interval": "D",
+                "timezone": "Asia/Bangkok",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "toolbar_bg": "#f1f3f6",
+                "enable_publishing": false,
+                "hide_top_toolbar": true,
+                "hide_legend": false,
+                "save_image": false,
+                "container_id": "tv-chart-container",
+                "backgroundColor": "rgba(15, 23, 42, 1)"
             });
         }
-        const btcChart = createChart(document.getElementById('btcChart').getContext('2d'), '#eab308');
-        const mstrChart = createChart(document.getElementById('mstrChart').getContext('2d'), '#ef4444');
 
-        // --- MAIN DATA FETCHING ---
-        async function fetchMarketData() {
-            // 1. Exchange Rate (USD/THB)
+        // --- DATA FETCHING ---
+
+        // Fetch USD/THB
+        async function fetchFX() {
             try {
                 const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
                 const data = await res.json();
                 state.exchangeRate = data.rates.THB;
                 document.getElementById('fx-rate').innerText = state.exchangeRate.toFixed(2);
-                document.getElementById('fx-status').className = "w-1.5 h-1.5 bg-green-500 rounded-full mr-1";
-                document.getElementById('fx-source').innerText = "Live API";
-            } catch(e) { console.warn("FX Error, using fallback"); }
+            } catch(e) { console.warn("FX Error"); }
+        }
 
-            // 2. BTC Data (Bitkub Real-time)
+        // Fetch BTC from Bitkub
+        async function fetchBTC() {
             try {
-                // Fetch Price
-                const tickerRes = await fetch(BITKUB_API);
-                const tickerData = await tickerRes.json();
-                if(tickerData && tickerData.THB_BTC) {
-                    const price = tickerData.THB_BTC.last;
-                    const prev = tickerData.THB_BTC.prevClose;
-                    const changePct = ((price - prev) / prev) * 100;
-                    
+                // Price
+                const tRes = await fetch(BITKUB_API);
+                const tData = await tRes.json();
+                if(tData && tData.THB_BTC) {
+                    const price = tData.THB_BTC.last;
+                    const change = tData.THB_BTC.percentChange;
                     state.btc.current = price;
-                    state.btc.loaded = true;
+                    updatePriceUI('btc', price, change, '฿');
                     
-                    // UI Update
-                    updatePriceUI('btc', price, changePct, '฿');
-                    
-                    // Fetch Candles for Chart (First Load or Update)
+                    // Candles (Once or Update)
                     if(state.btc.history.length === 0) {
-                        const candleRes = await fetch(BITKUB_CANDLES);
-                        const candleData = await candleRes.json();
-                        if(candleData && candleData.result) {
-                            // Bitkub candles format: [timestamp, open, high, low, close, volume]
-                            state.btc.history = candleData.result.map(c => c[4]); // Close prices
-                            
-                            // Calculate Basic S/R from recent candles
-                            const lows = candleData.result.map(c => c[3]);
-                            const highs = candleData.result.map(c => c[2]);
+                        const cRes = await fetch(BITKUB_CANDLES);
+                        const cData = await cRes.json();
+                        if(cData.result) {
+                            state.btc.history = cData.result.map(c=>c[4]);
+                            const lows = cData.result.map(c=>c[3]);
                             state.btc.support = Math.min(...lows.slice(-20));
-                            state.btc.resistance = Math.max(...highs.slice(-20));
-                            document.getElementById('btc-support').innerText = formatCurrency(state.btc.support);
-                            document.getElementById('btc-res').innerText = formatCurrency(state.btc.resistance);
+                            state.btc.resistance = Math.max(...cData.result.map(c=>c[2]).slice(-20));
+                            updateUIStats('btc');
                         }
                     } else {
-                        // Append latest price for smooth chart
                         state.btc.history.push(price);
-                        if(state.btc.history.length > 50) state.btc.history.shift();
+                        if(state.btc.history.length>50) state.btc.history.shift();
                     }
-                    
                     updateChart(btcChart, state.btc.history);
                     runWyckoffLogic('btc', state.btc.history, state.btc.current, state.btc.support);
                 }
-            } catch(e) {
-                console.error("Bitkub API Error", e);
-                document.getElementById('btc-price').innerText = "API Error";
-                // Fallback Simulation if API fails
-                if(!state.btc.loaded) {
-                     state.btc.current = 2800000;
-                     simulatePrice('btc', state.btc, btcChart, '฿');
-                }
-            }
-
-            // 3. MSTR Data (Simulated - Because Public Stock APIs need Keys/CORS)
-            // Note: If you have an API key (e.g., Finnhub), replace this block.
-            simulatePrice('mstr', state.mstr, mstrChart, '$');
-
-            // 4. Update Calculations
-            updateCalculations();
+            } catch(e) { console.error("Bitkub Error", e); }
         }
 
-        // --- HELPER FUNCTIONS ---
-        function simulatePrice(id, asset, chart, symbol) {
-            // Generates realistic-looking movement
-            if(asset.history.length === 0) {
-                let p = asset.current;
-                for(let i=0; i<50; i++) { asset.history.push(p); p += (Math.random()-0.5)*(asset.current*0.02); }
+        // Fetch MSTR Real Data (via Yahoo Proxy for Logic)
+        async function fetchMSTR() {
+            try {
+                // Note: Yahoo API via Proxy is the most stable free way to get raw JSON for logic
+                const res = await fetch(YAHOO_MSTR_API);
+                const data = await res.json();
+                
+                if(data.chart && data.chart.result) {
+                    const meta = data.chart.result[0].meta;
+                    const quotes = data.chart.result[0].indicators.quote[0];
+                    
+                    const price = meta.regularMarketPrice;
+                    const prevClose = meta.chartPreviousClose;
+                    const changePct = ((price - prevClose)/prevClose)*100;
+                    
+                    state.mstr.current = price;
+                    state.mstr.loaded = true;
+
+                    // Clean Data for Logic (remove nulls)
+                    const closes = quotes.close.filter(c => c !== null);
+                    const lows = quotes.low.filter(c => c !== null);
+                    const highs = quotes.high.filter(c => c !== null);
+
+                    state.mstr.history = closes.slice(-50); // Keep last 50 for RSI calc
+                    state.mstr.support = Math.min(...lows.slice(-20)); // Local support
+                    state.mstr.resistance = Math.max(...highs.slice(-20));
+
+                    updatePriceUI('mstr', price, changePct, '$');
+                    updateUIStats('mstr');
+                    runWyckoffLogic('mstr', state.mstr.history, state.mstr.current, state.mstr.support);
+                    updateCalculations();
+                }
+            } catch(e) { 
+                console.error("MSTR Data Error (Proxy)", e);
+                document.getElementById('mstr-price').innerText = "Simulating...";
+                // Fallback Simulation if Proxy fails
+                simulateMSTR();
             }
-            let change = (Math.random() - 0.48) * (asset.current * 0.005);
-            asset.current += change;
-            asset.history.push(asset.current);
-            if(asset.history.length > 50) asset.history.shift();
-            
-            updatePriceUI(id, asset.current, (Math.random()-0.5)*2, symbol); // Fake % change
-            updateChart(chart, asset.history);
-            runWyckoffLogic(id, asset.history, asset.current, asset.support);
+        }
+
+        // --- HELPERS ---
+        function simulateMSTR() {
+             // Fallback logic in case Yahoo proxy blocks
+             let change = (Math.random()-0.48) * 0.5;
+             state.mstr.current += change;
+             state.mstr.history.push(state.mstr.current);
+             if(state.mstr.history.length>50) state.mstr.history.shift();
+             updatePriceUI('mstr', state.mstr.current, (Math.random()-0.5)*2, '$');
+             runWyckoffLogic('mstr', state.mstr.history, state.mstr.current, state.mstr.support);
+             updateCalculations();
         }
 
         function updatePriceUI(id, price, changePct, symbol) {
-            const priceEl = document.getElementById(`${id}-price`);
-            priceEl.innerText = `${symbol}${price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            const chgEl = document.getElementById(`${id}-change`);
-            chgEl.innerText = `${changePct > 0 ? '+' : ''}${changePct.toFixed(2)}%`;
-            chgEl.className = changePct >= 0 ? "text-xs font-bold text-green-400" : "text-xs font-bold text-red-400";
-            if(changePct >= 0) priceEl.classList.replace('text-red-400', 'text-green-400');
-            else priceEl.classList.replace('text-green-400', 'text-red-400');
+            const pEl = document.getElementById(`${id}-price`);
+            pEl.innerText = `${symbol}${price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            const cEl = document.getElementById(`${id}-change`);
+            cEl.innerText = `${changePct>0?'+':''}${changePct.toFixed(2)}%`;
+            cEl.className = changePct>=0?"text-xs font-bold text-green-400":"text-xs font-bold text-red-400";
+            if(changePct>=0) pEl.classList.replace('text-red-400','text-green-400'); else pEl.classList.replace('text-green-400','text-red-400');
+        }
+
+        function updateUIStats(id) {
+            document.getElementById(`${id}-support`).innerText = (id==='btc'?'฿':'$') + state[id].support.toLocaleString(undefined,{maximumFractionDigits:0});
+            document.getElementById(`${id}-res`).innerText = (id==='btc'?'฿':'$') + state[id].resistance.toLocaleString(undefined,{maximumFractionDigits:0});
         }
 
         function updateChart(chart, data) {
             chart.data.datasets[0].data = data;
-            chart.options.scales.y.min = Math.min(...data) * 0.995;
-            chart.options.scales.y.max = Math.max(...data) * 1.005;
+            chart.options.scales.y.min = Math.min(...data)*0.995;
+            chart.options.scales.y.max = Math.max(...data)*1.005;
             chart.update();
-        }
-
-        function runWyckoffLogic(id, history, currentPrice, support) {
-            const rsi = calculateRSI(history);
-            let score = 50;
-            
-            // Simple Logic
-            const distSupport = ((currentPrice - support)/support)*100;
-            if(distSupport < 1) score += 30;
-            else if(distSupport < 3) score += 10;
-            if(rsi < 30) score += 20;
-            if(rsi > 70) score -= 20;
-            
-            score = Math.max(0, Math.min(100, score));
-            
-            // Update UI
-            document.getElementById(`${id}-rsi`).innerText = rsi.toFixed(1);
-            document.getElementById(`${id}-phase`).innerText = score > 70 ? "Spring / Test" : (score < 30 ? "Distribution" : "Accumulation");
-            document.getElementById(`${id}-score-text`).innerText = `${Math.floor(score)}/100`;
-            const gauge = document.getElementById(`${id}-gauge`);
-            gauge.style.width = `${score}%`;
-            gauge.className = `gauge-fill ${score>70?'bg-green-500':(score<40?'bg-red-500':'bg-yellow-500')}`;
-            
-            let rec = "WAIT";
-            if(score > 75) rec = "STRONG BUY (Zone SC)";
-            else if(score > 60) rec = "ACCUMULATE (Zone ST)";
-            else if(score < 40) rec = "AVOID / SELL";
-            document.getElementById(`${id}-recommendation`).innerText = rec;
         }
 
         function calculateRSI(prices, period=14) {
@@ -519,88 +370,83 @@
             let gains=0, losses=0;
             for(let i=prices.length-period; i<prices.length; i++) {
                 let diff = prices[i] - prices[i-1];
-                if(diff >= 0) gains += diff; else losses -= diff;
+                if(diff>=0) gains+=diff; else losses-=diff;
             }
             if(losses===0) return 100;
-            return 100 - (100 / (1 + (gains/losses)));
+            return 100 - (100/(1+(gains/losses)));
+        }
+
+        function runWyckoffLogic(id, history, current, support) {
+            const rsi = calculateRSI(history);
+            let score = 50;
+            const dist = ((current-support)/support)*100;
+            
+            // Basic Wyckoff Scoring
+            if(dist < 2) score += 30; // Near Support (Spring/SC)
+            else if(dist < 5) score += 10;
+            if(rsi < 35) score += 20; // Oversold
+            if(rsi > 70) score -= 20; // Overbought
+            
+            score = Math.max(0, Math.min(100, score));
+
+            document.getElementById(`${id}-rsi`).innerText = rsi.toFixed(1);
+            document.getElementById(`${id}-score-text`).innerText = `${Math.floor(score)}/100`;
+            const g = document.getElementById(`${id}-gauge`);
+            g.style.width = `${score}%`;
+            g.className = `gauge-fill ${score>70?'bg-green-500':(score<40?'bg-red-500':'bg-yellow-500')}`;
+            
+            let rec = "WAIT";
+            if(score>75) rec = "STRONG BUY (Zone SC)";
+            else if(score>60) rec = "ACCUMULATE (Zone ST)";
+            else if(score<40) rec = "AVOID / SELL";
+            document.getElementById(`${id}-recommendation`).innerText = rec;
         }
 
         function updateCalculations() {
-            state.budget = parseFloat(document.getElementById('input-budget').value) || 0;
+            state.budget = parseFloat(document.getElementById('input-budget').value)||0;
             const btcAlloc = state.budget * (state.allocation/100);
             const mstrAlloc = state.budget - btcAlloc;
             const strat = strategies[state.strategy];
 
-            // Update UI Labels
-            document.getElementById('btc-target-budget').innerText = formatCurrency(btcAlloc);
-            document.getElementById('mstr-target-budget').innerText = formatCurrency(mstrAlloc);
-            document.getElementById('btc-amt-display').innerText = formatCurrency(btcAlloc);
-            document.getElementById('mstr-amt-display').innerText = formatCurrency(mstrAlloc);
+            // Labels
+            document.getElementById('btc-target-budget').innerText = "฿"+btcAlloc.toLocaleString({maximumFractionDigits:0});
+            document.getElementById('mstr-target-budget').innerText = "฿"+mstrAlloc.toLocaleString({maximumFractionDigits:0});
+            document.getElementById('btc-amt-display').innerText = "฿"+btcAlloc.toLocaleString({maximumFractionDigits:0});
+            document.getElementById('mstr-amt-display').innerText = "฿"+mstrAlloc.toLocaleString({maximumFractionDigits:0});
 
             // BTC Ladder
             const btcBody = document.getElementById('btc-ladder-body');
             btcBody.innerHTML = '';
-            strat.steps.forEach((s, i) => {
+            strat.steps.forEach((s,i) => {
                 const px = state.btc.current * (1+s.offset);
                 const amt = btcAlloc * s.pct;
-                btcBody.innerHTML += `<tr><td class="text-slate-400">#${i+1}</td><td class="text-blue-300 text-xs">${s.label}</td><td class="font-mono">${formatCurrency(px)}</td><td class="font-mono text-yellow-400">${formatCurrency(amt)}</td></tr>`;
+                btcBody.innerHTML += `<tr><td class="text-slate-400">#${i+1}</td><td class="text-blue-300 text-xs">${s.label}</td><td class="font-mono">฿${px.toLocaleString(undefined,{maximumFractionDigits:0})}</td><td class="font-mono text-yellow-400">฿${amt.toLocaleString(undefined,{maximumFractionDigits:0})}</td></tr>`;
             });
 
             // MSTR Ladder
             const mstrBody = document.getElementById('mstr-ladder-body');
             mstrBody.innerHTML = '';
-            strat.steps.forEach((s, i) => {
+            strat.steps.forEach((s,i) => {
                 const pxUSD = state.mstr.current * (1+s.offset);
                 const amtTHB = mstrAlloc * s.pct;
                 const shares = (amtTHB / state.exchangeRate) / pxUSD;
-                mstrBody.innerHTML += `<tr><td class="text-slate-400">#${i+1}</td><td class="font-mono text-xs">$${pxUSD.toFixed(2)}</td><td class="font-mono text-green-400">${formatCurrency(amtTHB)}</td><td class="font-mono text-slate-400 text-xs">${shares.toFixed(4)}</td></tr>`;
+                mstrBody.innerHTML += `<tr><td class="text-slate-400">#${i+1}</td><td class="font-mono text-xs">$${pxUSD.toFixed(2)}</td><td class="font-mono text-green-400">฿${amtTHB.toLocaleString(undefined,{maximumFractionDigits:0})}</td><td class="font-mono text-slate-400 text-xs">${shares.toFixed(4)}</td></tr>`;
             });
-            
-            calcTracker();
-        }
-        
-        function calcTracker() {
-            // Simple tracker logic
-            const btcInv = parseFloat(document.getElementById('btc-invested').value)||0;
-            const btcAmt = parseFloat(document.getElementById('btc-amount').value)||0;
-            if(btcAmt>0) {
-                const currVal = btcAmt * state.btc.current;
-                document.getElementById('btc-avg-cost').innerText = formatCurrency(btcInv/btcAmt);
-                document.getElementById('btc-pl').innerText = formatCurrency(currVal - btcInv);
-                document.getElementById('btc-pl').className = (currVal-btcInv)>=0 ? "font-mono font-bold text-sm text-green-400" : "font-mono font-bold text-sm text-red-400";
-            }
-            
-            const mstrInv = parseFloat(document.getElementById('mstr-invested').value)||0;
-            const mstrAmt = parseFloat(document.getElementById('mstr-amount').value)||0;
-            if(mstrAmt>0) {
-                const currVal = mstrAmt * state.mstr.current * state.exchangeRate;
-                document.getElementById('mstr-avg-cost').innerText = formatCurrency(mstrInv/mstrAmt);
-                document.getElementById('mstr-pl').innerText = formatCurrency(currVal - mstrInv);
-                document.getElementById('mstr-pl').className = (currVal-mstrInv)>=0 ? "font-mono font-bold text-sm text-green-400" : "font-mono font-bold text-sm text-red-400";
-            }
         }
 
-        // Utils
-        function formatCurrency(n) { return "฿" + n.toLocaleString('th-TH', {maximumFractionDigits:0}); }
         function updateAllocationDisplay() { state.allocation = parseInt(document.getElementById('allocation-slider').value); document.getElementById('btc-pct-display').innerText = state.allocation+"%"; document.getElementById('mstr-pct-display').innerText = (100-state.allocation)+"%"; updateCalculations(); }
         function setStrategy(s) { state.strategy = s; ['wyckoff','dca','pyramid'].forEach(k=>document.getElementById('btn-'+k).className = k===s?"p-2 rounded border border-blue-500 bg-blue-500/20 text-blue-300 text-xs font-bold transition":"p-2 rounded border border-slate-600 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600 transition opacity-60"); document.getElementById('strategy-desc').innerText="Strategy: "+strategies[s].name; updateCalculations(); }
-        function confirmSync() { document.getElementById('confirmModal').style.display='flex'; }
-        function closeConfirmModal() { document.getElementById('confirmModal').style.display='none'; }
-        function executeSync() { closeConfirmModal(); showToast("จำลองการส่งข้อมูลสำเร็จ (ไม่ได้เชื่อมต่อ Backend จริง)", "success"); }
-        function showToast(m, t) { const T=document.getElementById('toast'); document.getElementById('toast-msg').innerText=m; T.className=`toast show ${t}`; setTimeout(()=>T.className=T.className.replace("show",""), 3000); }
 
-        // --- INIT ---
-        // Setup initial loop
-        updateAllocationDisplay();
-        setStrategy('wyckoff');
-        fetchMarketData(); // First run
-        setInterval(fetchMarketData, 5000); // Update every 5 seconds
+        // --- STARTUP ---
+        initTradingView();
+        fetchFX();
+        fetchBTC();
+        fetchMSTR();
         
-        // Populate dummy TF grid
-        ['1m','1h','4h','1d','1w'].forEach(t => {
-             document.getElementById('btc-tf-container').innerHTML += `<div class="tf-box"><div class="tf-label">${t}</div><div class="tf-score text-yellow-400">${Math.floor(Math.random()*40)+40}</div></div>`;
-             document.getElementById('mstr-tf-container').innerHTML += `<div class="tf-box"><div class="tf-label">${t}</div><div class="tf-score text-slate-400">${Math.floor(Math.random()*40)+30}</div></div>`;
-        });
+        // Loop
+        setInterval(fetchBTC, 10000); // 10s
+        setInterval(fetchMSTR, 60000); // Yahoo update every 1 min (don't spam proxy)
+        updateAllocationDisplay();
 
     </script>
 </body>
